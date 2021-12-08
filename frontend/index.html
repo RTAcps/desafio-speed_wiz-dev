@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head lang="pt-BR">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta
+    name="Speed Dev Wiz"
+    content="Esse app foi desenvolvido para o Desafio Final Speed Dev Wiz"
+  />
+  <title>Biblioteca Speed Dev Wiz</title>
+  <link rel="books icon" type="imagex/png" href="./images/books.ico">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="errors"></div>
+  <div id="telaLogin">
+    <form id="formLogin">
+      <label>E-mail: <input name="email" value="email@email.com" /></label>
+      <label
+        >Senha: <input type="password" name="senha" value="Test@123"
+      /></label>
+      <button type="submit" class="btn" id="buttonEntrar"> <span>Entrar</span> </button>
+    </form>
+  </div>
+  <div id="telaLivros">
+    <form id="formLivro">
+      <label>Descrição: <input name="descricao" /></label>
+      <label>ISBN: <input name="isbn" /></label>
+      <label
+        >Autor:
+        <select name="autorId"></select
+      ></label>
+      <label
+        >Ano de lançamento: <input name="anoLancamento" type="number"
+      /></label>
+      <div>
+        <button type="button" class="btn" id="buttonExcluir"> <span> Excluir</span> </button>
+        <button type="button" class="btn" id="buttonCancelar"> <span>Cancelar </span> </button>
+        <button type="submit" class="btn" id="buttonSalvar"> <span>Cadastrar </span> </button>
+      </div>
+    </form>
+    <ul></ul>
+  </div>
+
+  <footer>
+    <p>
+      <img class="wiz"
+        alt="Logo da Speed Wiz Dev da IGTI"
+        data-cke-saved-src="https://genteegestaoprdstg.blob.core.windows.net/public/paginadecarreiras2021/speed%20wiz_positiva%20cinza.png"
+        src="https://genteegestaoprdstg.blob.core.windows.net/public/paginadecarreiras2021/speed%20wiz_positiva%20cinza.png"
+        style="height: 15px; width: 100px"
+      />
+    </p>
+    <p>
+      Desenvolvido por: Rodrigo Teixeira de Andrade
+      <p><a 
+        href="https://www.linkedin.com/in/rodrigo-teixeira-de-andrade/"
+        target="_blank"
+        rel="noreferrer"
+      >
+       <img class="logo" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="Logo LinkedIn">
+      </a>
+      &nbsp
+      <a href="https://github.com/RTAcps/" target="_blank" rel="noreferrer">
+        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Logo GitHub">
+      </a>
+    </p>
+    </p>
+  </footer>
+  <script src="http.js"></script>
+  <script src="main.js"></script>
+</body>
