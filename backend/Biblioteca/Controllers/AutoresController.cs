@@ -1,15 +1,16 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.InputModel;
 using Biblioteca.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Biblioteca.Controllers
-{
+{   
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AutoresController : ControllerBase
     {
         private readonly BibliotecaDbContext _bibliotecaDbContext;
@@ -28,10 +29,20 @@ namespace Biblioteca.Controllers
 
             if (autores.Any())
             {
-                return Ok(autores);
+                return Ok(new
+                {
+                    Status = "Sucesso",
+                    Code = StatusCodes.Status200OK,
+                    Mensagem = autores
+                });
             }
 
-            return NotFound("Nenhum dado encontrado!");
+            return NotFound(new
+            {
+                Status = "Falha",
+                Code = StatusCodes.Status400BadRequest,
+                Mensagem = "Não encontrado"
+            });
         }
 
         [HttpGet("filtrar-por-nome")]
@@ -43,10 +54,20 @@ namespace Biblioteca.Controllers
 
             if (autores.Any())
             {
-                return Ok(autores);
+                return Ok(new
+                {
+                    Status = "Sucesso",
+                    Code = StatusCodes.Status200OK,
+                    Mensagem = autores
+                });
             }
 
-            return NotFound("Nenhum dado encontrado!");
+            return NotFound(new
+            {
+                Status = "Falha",
+                Code = StatusCodes.Status400BadRequest,
+                Mensagem = "Não encontrado"
+            });
         }        
         
         [HttpGet("filtrar-por-sobrenome")]
@@ -58,10 +79,20 @@ namespace Biblioteca.Controllers
 
             if (autores.Any())
             {
-                return Ok(autores);
+                return Ok(new
+                {
+                    Status = "Sucesso",
+                    Code = StatusCodes.Status200OK,
+                    Mensagem = autores
+                });
             }
 
-            return NotFound("Nenhum dado encontrado!");
+            return NotFound(new
+            {
+                Status = "Falha",
+                Code = StatusCodes.Status400BadRequest,
+                Mensagem = "Não encontrado"
+            });
         }
 
         [HttpGet("listar-todos")]
@@ -82,7 +113,12 @@ namespace Biblioteca.Controllers
             await _bibliotecaDbContext.Autores.AddAsync(autor);
             await _bibliotecaDbContext.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new
+            {
+                Status = "Sucesso",
+                Code = StatusCodes.Status200OK,
+                Mensagem = autor
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.InputModel;
 using Biblioteca.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace Biblioteca.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class LivrosController : ControllerBase
     {
         private readonly BibliotecaDbContext _bibliotecaDbContext;
@@ -28,10 +29,20 @@ namespace Biblioteca.Controllers
 
             if (livros.Any())
             {
-                return Ok(livros);
+                return Ok(new
+                {
+                    Status = "Sucesso",
+                    Code = StatusCodes.Status200OK,
+                    Mensagem = livros
+                });
             }
 
-            return NotFound("Nenhum registro encontrado!");
+            return NotFound(new
+            {
+                Status = "Falha",
+                Code = StatusCodes.Status400BadRequest,
+                Mensagem = "Não encontrado"
+            });
         }
 
         [HttpGet("filtrar-por-isbn")]
@@ -43,10 +54,20 @@ namespace Biblioteca.Controllers
 
             if (livro == null)
             {
-                return NotFound("Livro não existe no banco de dados!");
+                return NotFound(new
+                {
+                    Status = "Falha",
+                    Code = StatusCodes.Status400BadRequest,
+                    Mensagem = "Não encontrado"
+                });
             }
 
-            return Ok(livro);
+            return Ok(new
+            {
+                Status = "Sucesso",
+                Code = StatusCodes.Status200OK,
+                Mensagem = livro
+            });
         }
 
         [HttpGet("filtrar-por-ano-lancamento")]
@@ -58,10 +79,20 @@ namespace Biblioteca.Controllers
 
             if (livros.Any())
             {
-                return Ok(livros);
+                return Ok(new
+                {
+                    Status = "Sucesso",
+                    Code = StatusCodes.Status200OK,
+                    Mensagem = livros
+                });
             }
 
-            return NotFound("Nenhum livro encontrado!");
+            return NotFound(new
+            {
+                Status = "Falha",
+                Code = StatusCodes.Status400BadRequest,
+                Mensagem = "Não encontrado"
+            });
         }
 
         [HttpPut]
@@ -73,7 +104,12 @@ namespace Biblioteca.Controllers
 
             if (livro == null)
             {
-                return NotFound("Livro não existe!");
+                return NotFound(new
+                {
+                    Status = "Falha",
+                    Code = StatusCodes.Status400BadRequest,
+                    Mensagem = "Não existe"
+                });
             }
 
             livro.Descricao = dadosEntrada.Descricao;
@@ -83,7 +119,12 @@ namespace Biblioteca.Controllers
             _bibliotecaDbContext.Livros.Update(livro);
             await _bibliotecaDbContext.SaveChangesAsync();
 
-            return Ok(livro);
+            return Ok(new
+            {
+                Status = "Sucesso",
+                Code = StatusCodes.Status200OK,
+                Mensagem = livro
+            });
         }
 
         [HttpPost]
@@ -103,7 +144,8 @@ namespace Biblioteca.Controllers
             return Ok(
                         new
                         {
-                            success = true,
+                            Status = "Sucesso",
+                            Code = StatusCodes.Status200OK,
                             data = new
                             {
                                 descricao = livro.Descricao,
@@ -122,13 +164,23 @@ namespace Biblioteca.Controllers
 
             if (livro == null)
             {
-                return NotFound("Resgistro não encontrado!");
+                return NotFound(new
+                {
+                    Status = "Falha",
+                    Code = StatusCodes.Status400BadRequest,
+                    Mensagem = "Não encontrado"
+                });
             }
 
             _bibliotecaDbContext.Livros.Remove(livro);
             await _bibliotecaDbContext.SaveChangesAsync();
 
-            return Ok("Registro deletado com sucesso!");
+            return Ok(new
+            {
+                Status = "Sucesso",
+                Code = StatusCodes.Status200OK,
+                Mensagem = "Registro deletado com sucesso!"
+            });        
         }
     }
 }

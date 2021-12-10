@@ -17,7 +17,7 @@ namespace Biblioteca.Dados.Repositorio
         #endregion
 
         #region Constructor
-
+     
         public UsuarioRepositorio(BibliotecaDbContext contexto)
         {
             this.contexto = contexto;

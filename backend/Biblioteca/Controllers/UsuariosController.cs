@@ -1,6 +1,7 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.InputModel;
 using Biblioteca.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace Biblioteca.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UsuariosController : ControllerBase
     {
         private readonly BibliotecaDbContext _bibliotecaDbContext;
@@ -18,10 +19,10 @@ namespace Biblioteca.Controllers
             _bibliotecaDbContext = bibliotecaDbContext;
         }
 
-        [HttpPost("cadastrar-administrador")]
+        [HttpPost("cadastrar-admin")]
         public async Task<IActionResult> CadastrarAdministrador(UsuarioInput dadosEntrada)
         {
-            var administrador = new Usuario()
+            var admin = new Usuario()
             {
                 Nome = dadosEntrada.Nome,
                 Email = dadosEntrada.Email,
@@ -30,13 +31,15 @@ namespace Biblioteca.Controllers
                 CriadoEm = DateTime.Now
             };
 
-            await _bibliotecaDbContext.Usuarios.AddAsync(administrador);
+            await _bibliotecaDbContext.Usuarios.AddAsync(admin);
             await _bibliotecaDbContext.SaveChangesAsync();
 
             return Ok(
                         new
                         {
-                            administradorCriado = administrador.RoleId
+                            Status = "Sucesso",
+                            Code = StatusCodes.Status200OK,
+                            adminCriado = admin.RoleId
                         }
                     );
         }
@@ -59,7 +62,9 @@ namespace Biblioteca.Controllers
             return Ok(
                         new
                         {
-                            administradorCriado = comum.RoleId
+                            Status = "Sucesso",
+                            Code = StatusCodes.Status200OK,
+                            comumCriado = comum.RoleId
                         }
                     );
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -12,9 +13,13 @@ namespace Biblioteca.Configuracao
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Livro Shop",
+                    Title = "Biblioteca",
                     Description = "Api responsável por cadastrar livros",
-                    Contact = new OpenApiContact { Name = "Livro Shop", Email = "contato@livroshop.com" }
+                    Contact = new OpenApiContact 
+                    { 
+                        Name = "Rodrigo", 
+                        Email = "rodrigo@email.com" 
+                    }
                 });
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -41,13 +46,17 @@ namespace Biblioteca.Configuracao
             });
         }
 
-        public static void UseConfiguracaoSwagger(this IApplicationBuilder app)
+        public static void UseConfiguracaoSwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
         {
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("v1/swagger.json", "v1");
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"{description.GroupName}/swagger.json", 
+                        description.GroupName.ToUpperInvariant());
+                }
             });
         }
     }

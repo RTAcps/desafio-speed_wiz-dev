@@ -1,6 +1,6 @@
 ﻿namespace Biblioteca.Services.Auth.Jwt.Interfaces
 {
-    interface IJwtAuthGerenciador
+    public interface IJwtAuthGerenciador
     {
         JwtAuthModelo GerarToken(JwtCredenciais credenciais);
     }
