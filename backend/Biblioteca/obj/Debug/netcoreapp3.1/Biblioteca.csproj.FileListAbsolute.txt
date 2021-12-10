@@ -1,0 +1,7 @@
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.csproj.AssemblyReference.cache
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.AssemblyInfoInputs.cache
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.AssemblyInfo.cs
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\Documents\Programacao\IGTI\5.Desafio_final\wiz\backend\Biblioteca\obj\Debug\netcoreapp3.1\Biblioteca.MvcApplicationPartsAssemblyInfo.cs
