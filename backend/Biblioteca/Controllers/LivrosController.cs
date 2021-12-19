@@ -1,9 +1,10 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.InputModel;
 using Biblioteca.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,89 +14,47 @@ namespace Biblioteca.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     public class LivrosController : ControllerBase
     {
+        #region Campos
+
         private readonly BibliotecaDbContext _bibliotecaDbContext;
+
+        #endregion
+
+        #region Construtor
 
         public LivrosController(BibliotecaDbContext bibliotecaDbContext)
         {
             _bibliotecaDbContext = bibliotecaDbContext;
         }
 
-        [HttpGet("filtrar-por-descricao")]
-        public async Task<IActionResult> FiltrarPorDescricao(string descricao)
+        #endregion
+
+        #region Metodos
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ListarLivros()
         {
             var livros = await _bibliotecaDbContext.Livros
-                .Where(x => x.Descricao.Contains(descricao))
-                .ToListAsync();
-
-            if (livros.Any())
-            {
-                return Ok(new
-                {
-                    Status = "Sucesso",
-                    Code = StatusCodes.Status200OK,
-                    Mensagem = livros
-                });
-            }
-
-            return NotFound(new
-            {
-                Status = "Falha",
-                Code = StatusCodes.Status400BadRequest,
-                Mensagem = "Não encontrado"
-            });
-        }
-
-        [HttpGet("filtrar-por-isbn")]
-        public async Task<IActionResult> FiltrarPorISBN(int isbn)
-        {
-            var livro = await _bibliotecaDbContext.Livros
-                .Where(x => x.ISBN == isbn)
-                .FirstOrDefaultAsync();
-
-            if (livro == null)
-            {
-                return NotFound(new
-                {
-                    Status = "Falha",
-                    Code = StatusCodes.Status400BadRequest,
-                    Mensagem = "Não encontrado"
-                });
-            }
-
+                                .Include(x => x.Autor)
+                                .ToListAsync();
             return Ok(new
             {
-                Status = "Sucesso",
-                Code = StatusCodes.Status200OK,
-                Mensagem = livro
-            });
-        }
-
-        [HttpGet("filtrar-por-ano-lancamento")]
-        public async Task<IActionResult> FiltrarPorAnoLancamento(int anoLancamento)
-        {
-            var livros = await _bibliotecaDbContext.Livros
-                .Where(x => x.AnoLancamento == anoLancamento)
-                .ToListAsync();
-
-            if (livros.Any())
-            {
-                return Ok(new
-                {
-                    Status = "Sucesso",
-                    Code = StatusCodes.Status200OK,
-                    Mensagem = livros
-                });
-            }
-
-            return NotFound(new
-            {
-                Status = "Falha",
-                Code = StatusCodes.Status400BadRequest,
-                Mensagem = "Não encontrado"
+                data = livros.Select(x =>
+                                new
+                                {
+                                    Id = x.Id, 
+                                    Descricao = x.Descricao,
+                                    ISBN = x.ISBN,
+                                    AnoLancamento = x.AnoLancamento,
+                                    Autor = x.AutorId, 
+                                    NomeAutor = x.Autor.Nome + " " + x.Autor.Sobrenome
+                                })
             });
         }
 
         [HttpPut]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Atualizar(AtualizarLivroInput dadosEntrada)
         {
             var livro = await _bibliotecaDbContext.Livros
@@ -107,8 +66,8 @@ namespace Biblioteca.Controllers
                 return NotFound(new
                 {
                     Status = "Falha",
-                    Code = StatusCodes.Status400BadRequest,
-                    Mensagem = "Não existe"
+                    Code = 404,
+                    Data = "Não encontrado!"
                 });
             }
 
@@ -122,19 +81,42 @@ namespace Biblioteca.Controllers
             return Ok(new
             {
                 Status = "Sucesso",
-                Code = StatusCodes.Status200OK,
-                Mensagem = livro
+                Code = 200,
+                Mensagem = new
+                {
+                    NomeLivro = livro.Descricao,
+                    ISBN = livro.ISBN,
+                    AnoLancamento = livro.AnoLancamento
+                }
             });
         }
 
         [HttpPost]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> CadastrarLivro(LivroInput dadosEntrada)
         {
+            var autor = await _bibliotecaDbContext.Autores
+                .Where(x => x.Id == dadosEntrada.AutorId)
+                .FirstOrDefaultAsync();
+            
+            if (autor == null)
+            {
+                return NotFound(
+                                    new
+                                    {
+                                        Status = "Falha",
+                                        Code = 404,
+                                        Data = "Autor não encontrado!"
+                                    }
+                                );
+            }
+
             var livro = new Livro()
             {
                 Descricao = dadosEntrada.Descricao,
                 ISBN = dadosEntrada.ISBN,
                 AnoLancamento = dadosEntrada.AnoLancamento,
+                CriadoEm = DateTime.Now,
                 AutorId = dadosEntrada.AutorId
             };
 
@@ -145,17 +127,19 @@ namespace Biblioteca.Controllers
                         new
                         {
                             Status = "Sucesso",
-                            Code = StatusCodes.Status200OK,
-                            data = new
+                            Code = 200,
+                            Data = new
                             {
-                                descricao = livro.Descricao,
-                                isbn = livro.ISBN
+                                Descricao = livro.Descricao,
+                                ISBN = livro.ISBN,
+                                AnoLancamento = dadosEntrada.AnoLancamento
                             }
                         }
                     );
         }
 
         [HttpDelete]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Deletar(int codigo)
         {
             var livro = await _bibliotecaDbContext.Livros
@@ -167,8 +151,8 @@ namespace Biblioteca.Controllers
                 return NotFound(new
                 {
                     Status = "Falha",
-                    Code = StatusCodes.Status400BadRequest,
-                    Mensagem = "Não encontrado"
+                    Code = 404,
+                    Data = "Não encontrado!"
                 });
             }
 
@@ -178,9 +162,11 @@ namespace Biblioteca.Controllers
             return Ok(new
             {
                 Status = "Sucesso",
-                Code = StatusCodes.Status200OK,
-                Mensagem = "Registro deletado com sucesso!"
+                Code = 201,
+                Data = "Registro deletado com sucesso!"
             });        
         }
+
+        #endregion
     }
 }

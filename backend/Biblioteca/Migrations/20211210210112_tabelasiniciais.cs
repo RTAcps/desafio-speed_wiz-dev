@@ -84,7 +84,7 @@ namespace Biblioteca.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Nome" },
-                values: new object[] { 1, "Admnistrador" });
+                values: new object[] { 1, "Admin" });
 
             migrationBuilder.InsertData(
                 table: "Roles",
@@ -94,12 +94,12 @@ namespace Biblioteca.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "Id", "Nome", "Email", "Senha", "CriadoEm", "RoleId" },
-                values: new object[] { 1, "Rodrigo", "rodrigo@gmail.com", "Test@123", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
+                values: new object[] { 1, "Rodrigo Andrade", "rodrigo@email.com", "Test@123", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "Id", "Nome", "Email", "Senha", "CriadoEm", "RoleId" },
-                values: new object[] { 2, "Junior", "junior@gmail.com", "Test@123", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 });
+                values: new object[] { 2, "Junior Magno", "junior@email.com", "Test@123", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Livros_AutorId",

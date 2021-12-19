@@ -12,7 +12,7 @@ namespace Biblioteca.Mapping
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Nome).HasColumnType("VARCHAR(60)").IsRequired();
             builder.Property(x => x.Sobrenome).HasColumnType("VARCHAR(60)").IsRequired();
-            builder.Property(x => x.CriadoEm).IsRequired();          
+            builder.Property(x => x.CriadoEm).HasColumnType("DATETIME").IsRequired();          
             builder.ToTable("autores");
         }
     }

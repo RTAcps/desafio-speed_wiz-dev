@@ -1,5 +1,5 @@
 ﻿using Biblioteca.Adaptadores;
-using Biblioteca.Dados.Repositorio.Interfaces;
+using Biblioteca.Context;
 using Biblioteca.Services.Auth.Jwt;
 using Biblioteca.Services.Auth.Jwt.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,17 +18,17 @@ namespace Biblioteca.Controllers
     {
         #region Campos
 
-        private readonly IUsuarioRepositorio _usuarioRepositorio;
+        private readonly BibliotecaDbContext _bibliotecaDbContext;
         private readonly IJwtAuthGerenciador _jwtAuthGerenciador;
 
         #endregion
 
         #region Construtor
 
-        public AuthController(IUsuarioRepositorio usuarioRepositorio,
+        public AuthController(BibliotecaDbContext bibliotecaDbContext,
                               IJwtAuthGerenciador jwtAuthGerenciador)
         {
-            _usuarioRepositorio = usuarioRepositorio;
+            _bibliotecaDbContext = bibliotecaDbContext;
             _jwtAuthGerenciador = jwtAuthGerenciador;
         }
 
@@ -42,35 +42,38 @@ namespace Biblioteca.Controllers
         public async Task<IActionResult> Autenticar([FromBody] JwtUsuarioCredenciais jwtUsuarioCredenciais)
         {
             try
-            {
-                var usuario = await _usuarioRepositorio
-            .RecuperarPorCredenciais(jwtUsuarioCredenciais.Email, jwtUsuarioCredenciais.Senha);
-
+            {                
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest("Parâmetros inválidos, verifique!");
-                }                       
+                    return BadRequest(new
+                    {
+                        Status = "Falha",
+                        Code = 400,
+                        Data = "Parâmetros inválidos, verifique!"
+                    });
+                }
+
+                var usuario = await _bibliotecaDbContext
+                    .Usuarios.SingleOrDefaultAsync(x => x
+                    .Email == jwtUsuarioCredenciais.Email && x
+                    .Senha == jwtUsuarioCredenciais.Senha);
 
                 if (usuario == null)
                 {
-                    return NotFound("Usuário não encontrado!");
-                }
-
-                var credenciais = new JwtCredenciais
-                {
-                    Email = usuario.Email,
-                    Senha = usuario.Senha,
-                    Role = usuario.Role.Nome
-                };
-
-                var response = new
+                    return NotFound(new
+                    {
+                        Status = "Falha",
+                        Code = 404,
+                        Data = "Usuário não encontrado!"
+                    });
+                }                               
+                
+                return Ok(new
                 {
                     Status = "Sucesso",
                     Code = StatusCodes.Status200OK,
                     Data = _jwtAuthGerenciador.GerarToken(usuario.ParaJwtCredenciais())
-                };
-
-                return Ok(response);
+                });
 
             }
             catch (Exception e)
@@ -79,7 +82,7 @@ namespace Biblioteca.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     Status = "Erro",
-                    Code = StatusCodes.Status500InternalServerError,
+                    Code = 500,
                     Mensagem = e.Message
                 });
             }

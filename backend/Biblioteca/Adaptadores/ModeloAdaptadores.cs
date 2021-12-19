@@ -16,7 +16,8 @@ namespace Biblioteca.Adaptadores
             return new JwtCredenciais
             {
                 Email = usuario.Email,
-                Senha = usuario.Senha
+                Senha = usuario.Senha,
+                Role = usuario.RoleId.ToString()
             };
 
         }

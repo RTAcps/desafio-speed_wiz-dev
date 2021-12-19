@@ -87,7 +87,7 @@ namespace Biblioteca.Migrations
                         new
                         {
                             Id = 1,
-                            Nome = "Admnistrador"
+                            Nome = "Admin"
                         },
                         new
                         {
@@ -128,8 +128,8 @@ namespace Biblioteca.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "rodrigo@gmail.com",
-                            Nome = "Rodrigo",
+                            Email = "rodrigo@email.com",
+                            Nome = "Rodrigo Andrade",
                             RoleId = 1,
                             Senha = "Test@123",
                             CriadoEm = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -137,8 +137,8 @@ namespace Biblioteca.Migrations
                         new
                         {
                             Id = 2,
-                            Email = "junior@gmail.com",
-                            Nome = "Junior",
+                            Email = "junior@email.com",
+                            Nome = "Junior Magno",
                             RoleId = 2,
                             Senha = "Test@123",
                             CriadoEm = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)

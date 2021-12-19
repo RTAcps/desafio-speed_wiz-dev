@@ -13,7 +13,7 @@ namespace Biblioteca.Mapping
             builder.Property(x => x.Descricao).HasColumnType("VARCHAR(60)").IsRequired();
             builder.Property(x => x.ISBN).IsRequired();
             builder.Property(x => x.AnoLancamento).IsRequired();
-            builder.Property(x => x.CriadoEm).IsRequired();
+            builder.Property(x => x.CriadoEm).HasColumnType("DATETIME").IsRequired();
             builder.HasOne(x => x.Autor)
                 .WithMany()
                 .HasForeignKey(x => x.AutorId);

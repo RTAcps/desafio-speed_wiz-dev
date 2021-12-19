@@ -1,9 +1,11 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.InputModel;
 using Biblioteca.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Biblioteca.Controllers
@@ -12,61 +14,64 @@ namespace Biblioteca.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     public class UsuariosController : ControllerBase
     {
+        #region Campos
+
         private readonly BibliotecaDbContext _bibliotecaDbContext;
+
+        #endregion
+
+        #region Construtor
 
         public UsuariosController(BibliotecaDbContext bibliotecaDbContext)
         {
             _bibliotecaDbContext = bibliotecaDbContext;
         }
 
-        [HttpPost("cadastrar-admin")]
-        public async Task<IActionResult> CadastrarAdministrador(UsuarioInput dadosEntrada)
+        #endregion
+
+        #region Metodos
+
+        [HttpPost]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> CadastrarUsuario(UsuarioInput dadosEntrada)
         {
-            var admin = new Usuario()
+            var role = await _bibliotecaDbContext.Roles
+                .Where(x => x.Id == dadosEntrada.RoleId)
+                .FirstOrDefaultAsync();
+
+            if (role == null)
             {
+                return NotFound(
+                                    new
+                                    {
+                                        Status = "Falha",
+                                        Code = 404,
+                                        Data = "Função não encontrada!"
+                                    }
+                                );
+            }
+            var usuario = new Usuario()
+            {
+                RoleId = dadosEntrada.RoleId,
                 Nome = dadosEntrada.Nome,
                 Email = dadosEntrada.Email,
                 Senha = dadosEntrada.Senha,
-                RoleId = dadosEntrada.RoleId,
                 CriadoEm = DateTime.Now
             };
 
-            await _bibliotecaDbContext.Usuarios.AddAsync(admin);
+            await _bibliotecaDbContext.Usuarios.AddAsync(usuario);
             await _bibliotecaDbContext.SaveChangesAsync();
 
             return Ok(
                         new
                         {
                             Status = "Sucesso",
-                            Code = StatusCodes.Status200OK,
-                            adminCriado = admin.RoleId
+                            Code = 201,
+                            Data = true
                         }
-                    );
+                );
         }
 
-        [HttpPost("cadastrar-comum")]
-        public async Task<IActionResult> CadastrarComum(UsuarioInput dadosEntrada)
-        {
-            var comum = new Usuario()
-            {
-                Nome = dadosEntrada.Nome,
-                Email = dadosEntrada.Email,
-                Senha = dadosEntrada.Senha,
-                RoleId = dadosEntrada.RoleId,
-                CriadoEm = DateTime.Now
-            };
-
-            await _bibliotecaDbContext.Usuarios.AddAsync(comum);
-            await _bibliotecaDbContext.SaveChangesAsync();
-
-            return Ok(
-                        new
-                        {
-                            Status = "Sucesso",
-                            Code = StatusCodes.Status200OK,
-                            comumCriado = comum.RoleId
-                        }
-                    );
-        }
+        #endregion
     }
 }

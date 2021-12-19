@@ -14,26 +14,6 @@ namespace Biblioteca.Models
         public Role Role { get; set; }
         public int RoleId { get; set; }
 
-        #endregion
-
-        #region Construtor
-
-        public Usuario() { }
-
-        public Usuario(int id, string nome, string email, string senha, int roleId)
-            : this(nome, email, senha, roleId)
-        {
-            Id = id;           
-        } 
-
-        public Usuario(string nome, string email, string senha, int roleId)
-        {            
-            Nome = nome;
-            Email = email;
-            Senha = senha;
-            RoleId = roleId;
-        }
-
-        #endregion
+        #endregion        
     }
 }

@@ -11,8 +11,8 @@ namespace Biblioteca.Models
         public Int64 ISBN { get; set; }
         public int AnoLancamento { get; set; }
         public DateTime CriadoEm { get; set; }
-        public Autor Autor { get; set; }
         public int AutorId { get; set; }
+        public Autor Autor { get; set; }
 
         #endregion      
     }

@@ -1,7 +1,5 @@
 using Biblioteca.Configuracao;
 using Biblioteca.Context;
-using Biblioteca.Dados.Repositorio;
-using Biblioteca.Dados.Repositorio.Interfaces;
 using Biblioteca.Services.Auth.Jwt;
 using Biblioteca.Services.Auth.Jwt.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -45,18 +43,6 @@ namespace Biblioteca
 
             #endregion
 
-            #region AuthSettings
-
-            services.AddConfiguracaoAuth(Configuration);
-
-            #endregion
-
-            #region Repositories
-
-            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-
-            #endregion
-
             #region VersioningSettings
 
             services.AdicinarVersionamentoAPI();
@@ -69,19 +55,9 @@ namespace Biblioteca
 
             #endregion
 
-            #region ContextsEFCore
+            #region Cors
 
-            services.AddDbContext<BibliotecaDbContext>(options => 
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            #endregion
-
-            #region CorsConfigurantion
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Development", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+            services.AddCors();
 
             #endregion
 
@@ -90,6 +66,7 @@ namespace Biblioteca
             services.AddControllers();
 
             #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,7 +77,11 @@ namespace Biblioteca
                 app.UseDeveloperExceptionPage();                
             }
 
-            app.UseCors("Development");
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials());
 
             app.UseConfiguracaoSwagger(provider);
 

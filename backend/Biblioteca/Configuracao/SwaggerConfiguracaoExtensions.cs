@@ -14,10 +14,10 @@ namespace Biblioteca.Configuracao
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Biblioteca",
-                    Description = "Api responsável por cadastrar livros",
+                    Description = "Api responsável por cadastrar livros em uma Biblioteca",
                     Contact = new OpenApiContact 
                     { 
-                        Name = "Rodrigo", 
+                        Name = "Rodrigo Andrade", 
                         Email = "rodrigo@email.com" 
                     }
                 });

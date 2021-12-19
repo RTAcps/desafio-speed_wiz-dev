@@ -10,7 +10,6 @@ namespace Biblioteca.InputModel
         public string Descricao { get; set; }
         public int ISBN { get; set; }
         public int AnoLancamento { get; set; }
-        public DateTime CriadoEm { get; set; }
         public int AutorId { get; set; }
     }
 }
